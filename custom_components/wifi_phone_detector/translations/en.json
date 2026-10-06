@@ -1,0 +1,71 @@
+{
+  "title": "FiberGateway Phone Detector",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to your FiberGateway router",
+        "description": "Read connected devices from both Wi-Fi radios using your router login. HOME and GUEST were verified on GR141DG. Requires local Telnet access; credentials are transmitted without encryption.",
+        "data": {
+          "host": "Router address",
+          "port": "Telnet port",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Update router credentials",
+        "data": {
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "reconfigure": {
+        "title": "Update router connection",
+        "data": {
+          "host": "Router address",
+          "port": "Telnet port",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "names": {
+        "title": "Phone name keywords",
+        "description": "A connected device counts as a phone if its name contains any keyword, ignoring capital letters. Enter typical phone names or your own device names, separated by commas or newlines. Visitors with matching names are detected automatically. Departure delay keeps presence on through brief disconnections; 0 disables it.",
+        "data": {
+          "phone_name_keywords": "Name keywords",
+          "scan_interval": "Check every (seconds, 15–300)",
+          "departure_delay": "Departure delay in seconds (0–1800)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The router rejected the username or password.",
+      "cannot_connect": "Cannot read the router; check the address, port and Telnet access.",
+      "unsupported_response": "The Wi-Fi association output is unsupported; a station output sample is needed.",
+      "invalid_input": "Check the connection details and remove control characters from credentials.",
+      "cannot_read_names": "Connected devices were read, but DHCP device names are unavailable.",
+      "invalid_names": "Enter at least one keyword, separated by commas or newlines."
+    },
+    "abort": {
+      "already_configured": "This router connection is already configured.",
+      "reauth_successful": "Router credentials updated.",
+      "reconfigure_successful": "Router connection updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Phone name keywords",
+        "description": "A connected device counts as a phone if its name contains any keyword, ignoring capital letters. Enter typical phone names or your own device names, separated by commas or newlines. Visitors with matching names are detected automatically. Departure delay keeps presence on through brief disconnections; 0 disables it.",
+        "data": {
+          "phone_name_keywords": "Name keywords",
+          "scan_interval": "Check every (seconds, 15–300)",
+          "departure_delay": "Departure delay in seconds (0–1800)"
+        }
+      }
+    },
+    "error": {
+      "invalid_names": "Enter at least one keyword, separated by commas or newlines."
+    }
+  }
+}

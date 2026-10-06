@@ -1,0 +1,16 @@
+{
+  "domain": "wifi_phone_detector",
+  "name": "FiberGateway Phone Detector",
+  "codeowners": [
+    "@goncalox"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/goncalox/fibergateway-phone-detector",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "requirements": [
+    "telnetlib3==4.0.3"
+  ],
+  "version": "0.3.0",
+  "issue_tracker": "https://github.com/goncalox/fibergateway-phone-detector/issues"
+}

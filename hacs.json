@@ -1,0 +1,6 @@
+{
+  "name": "FiberGateway Phone Detector",
+  "homeassistant": "2025.3.0",
+  "country": "PT",
+  "render_readme": true
+}

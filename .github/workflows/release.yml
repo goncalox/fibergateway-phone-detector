@@ -1,0 +1,30 @@
+name: Publish release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-standalone.txt homeassistant==2025.3.0
+      - name: Test source before release
+        run: |
+          python -m unittest discover -s tests -v
+          python tools/ha_smoke_test.py
+      - name: Build and validate release archive
+        run: python tools/build_release.py --output dist --tag "$GITHUB_REF_NAME"
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" "dist/fibergateway-phone-detector-$GITHUB_REF_NAME.zip" --verify-tag --title "FiberGateway Phone Detector $GITHUB_REF_NAME" --notes-file CHANGELOG.md
