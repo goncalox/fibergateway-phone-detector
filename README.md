@@ -10,7 +10,16 @@ For example, `iphone` matches both `Sam-iPhone` and `iPhone`, while `android` ma
 
 Visitors are picked up automatically if the name reported by the router contains a configured keyword.
 
-## Install
+## Install with HACS
+
+1. Open HACS → Custom repositories.
+2. Add `https://github.com/goncalox/fibergateway-phone-detector` with type **Integration**.
+3. Download **FiberGateway Phone Detector** and restart Home Assistant.
+4. Open **Settings → Devices & services → Add integration → FiberGateway Phone Detector** and enter your router login and name keywords.
+
+Version [v0.3.0](https://github.com/goncalox/fibergateway-phone-detector/releases/tag/v0.3.0) passes HACS and Home Assistant manifest validation, 61 core tests and 13 Home Assistant runtime checks.
+
+## Manual installation
 
 1. Extract the v0.3.0 ZIP and copy `custom_components/wifi_phone_detector` into your Home Assistant `/config/custom_components/` directory.
 2. Restart Home Assistant.

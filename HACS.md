@@ -4,7 +4,9 @@
 
 The source is public at [goncalox/fibergateway-phone-detector](https://github.com/goncalox/fibergateway-phone-detector).
 
-Tests pass on GitHub; HACS repository metadata and manifest validation are being finalized for the first release.
+Version [v0.3.0](https://github.com/goncalox/fibergateway-phone-detector/releases/tag/v0.3.0) is published with an installable ZIP.
+
+All 61 core tests, 13 Home Assistant runtime checks, HACS validation and Home Assistant manifest validation pass on GitHub.
 
 ## Install
 
