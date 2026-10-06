@@ -2,18 +2,14 @@
 
 ## Publication status
 
-The repository layout, brand icon, manifests, test workflow, HACS validation and release workflow are prepared.
+The source is public at [goncalox/fibergateway-phone-detector](https://github.com/goncalox/fibergateway-phone-detector).
 
-Publishing to a public GitHub repository is still required before HACS can install or update this integration.
+Tests pass on GitHub; HACS repository metadata and manifest validation are being finalized for the first release.
 
-The proposed repository is `goncalox/fibergateway-phone-detector`; documentation and issue links currently target that proposed repository.
-
-HACS repository validation and the GitHub release workflow can only be verified after publication.
-
-## Once published
+## Install
 
 1. Open HACS and choose **Custom repositories** from its menu.
-2. Enter the published GitHub repository URL and choose **Integration** as the type.
+2. Enter `https://github.com/goncalox/fibergateway-phone-detector` and choose **Integration** as the type.
 3. Add and download **FiberGateway Phone Detector**.
 4. Restart Home Assistant.
 5. Add or continue using the integration under **Settings → Devices & services**.
@@ -34,9 +30,9 @@ Push only this project's integration source, documentation, tests and workflows.
 
 Keep router reports, packet captures, local environments and credentials outside the repository.
 
-After repository checks pass, tag the matching version, for example `v0.3.0`.
+A push to `main` publishes the manifest version when it has no existing release; version tags and manual workflow runs are also supported.
 
-The release workflow checks the source, confirms the tag matches the manifest version, builds a manual-install ZIP and publishes a full GitHub release.
+The release workflow validates the manifest, runs the source tests, checks the version, builds a manual-install ZIP and publishes a full GitHub release from the tested commit.
 
 HACS reads the integration files from the release's source tree; it does not use the manual-install ZIP.
 

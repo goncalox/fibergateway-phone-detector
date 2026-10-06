@@ -2,8 +2,15 @@ name: Publish release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: publish-release
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -16,6 +23,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+      - name: Validate integration manifest
+        uses: home-assistant/actions/hassfest@master
+      - name: Determine release version
+        run: |
+          RELEASE_TAG="$(python -c 'import json; print("v" + json.load(open("custom_components/wifi_phone_detector/manifest.json"))["version"])')"
+          if [[ "$GITHUB_REF_TYPE" == tag && "$GITHUB_REF_NAME" != "$RELEASE_TAG" ]]; then
+            echo "Tag must match manifest version" >&2
+            exit 1
+          fi
+          echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
       - name: Install test dependencies
         run: python -m pip install -r requirements-standalone.txt homeassistant==2025.3.0
       - name: Test source before release
@@ -23,8 +40,13 @@ jobs:
           python -m unittest discover -s tests -v
           python tools/ha_smoke_test.py
       - name: Build and validate release archive
-        run: python tools/build_release.py --output dist --tag "$GITHUB_REF_NAME"
+        run: python tools/build_release.py --output dist --tag "$RELEASE_TAG"
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create "$GITHUB_REF_NAME" "dist/fibergateway-phone-detector-$GITHUB_REF_NAME.zip" --verify-tag --title "FiberGateway Phone Detector $GITHUB_REF_NAME" --notes-file CHANGELOG.md
+        run: |
+          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            echo "Release already exists; leaving its tag and assets unchanged."
+            exit 0
+          fi
+          gh release create "$RELEASE_TAG" "dist/fibergateway-phone-detector-$RELEASE_TAG.zip" --target "$GITHUB_SHA" --title "FiberGateway Phone Detector $RELEASE_TAG" --notes-file CHANGELOG.md

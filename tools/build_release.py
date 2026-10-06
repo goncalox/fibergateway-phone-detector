@@ -21,7 +21,7 @@ def build(output: Path, tag: str | None = None) -> Path:
         for path in sorted((PROJECT / "custom_components/wifi_phone_detector").rglob("*")):
             if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc":
                 archive.write(path, path.relative_to(PROJECT))
-        for name in ("README.md", "AUTOMATIONS.md", "DASHBOARD.md", "HACS.md", "CHANGELOG.md", "GR141DG-compatibility.md", "STANDALONE.md", "requirements-standalone.txt", "hacs.json", "tools/standalone.py"):
+        for name in ("LICENSE", "README.md", "AUTOMATIONS.md", "DASHBOARD.md", "HACS.md", "CHANGELOG.md", "GR141DG-compatibility.md", "STANDALONE.md", "requirements-standalone.txt", "hacs.json", "tools/standalone.py"):
             archive.write(PROJECT / name, name)
     with zipfile.ZipFile(destination) as archive:
         if archive.testzip() is not None:

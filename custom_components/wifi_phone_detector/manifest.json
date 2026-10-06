@@ -8,9 +8,9 @@
   "documentation": "https://github.com/goncalox/fibergateway-phone-detector",
   "integration_type": "device",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/goncalox/fibergateway-phone-detector/issues",
   "requirements": [
     "telnetlib3==4.0.3"
   ],
-  "version": "0.3.0",
-  "issue_tracker": "https://github.com/goncalox/fibergateway-phone-detector/issues"
+  "version": "0.3.0"
 }

@@ -62,4 +62,4 @@ No installation on the user's Home Assistant instance has been performed.
 
 Departure tracking uses monotonic time and successful polls, with separate timers per matching device.
 
-Public GitHub publication, HACS remote validation, and installation on the user’s Home Assistant remain pending.
+The source is public on GitHub and its core and Home Assistant runtime checks pass there; HACS metadata validation and installation on the user’s Home Assistant remain pending.

@@ -20,9 +20,9 @@ Visitors are picked up automatically if the name reported by the router contains
 
 Home Assistant 2025.3 or newer is required.
 
-HACS packaging, validation and release workflows are prepared; publication to the approved public GitHub repository is in progress.
+The source is published at [goncalox/fibergateway-phone-detector](https://github.com/goncalox/fibergateway-phone-detector); add it to HACS as a custom **Integration** repository.
 
-See [HACS.md](HACS.md) for installation and update steps once the repository is published.
+See [HACS.md](HACS.md) for installation and update steps.
 
 Router Telnet access sends its login without encryption, so use it on your trusted local network.
 
