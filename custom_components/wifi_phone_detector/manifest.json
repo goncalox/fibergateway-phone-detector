@@ -1,6 +1,6 @@
 {
   "domain": "wifi_phone_detector",
-  "name": "FiberGateway Phone Detector",
+  "name": "FiberGateway",
   "codeowners": [
     "@goncalox"
   ],
@@ -12,5 +12,5 @@
   "requirements": [
     "telnetlib3==4.0.3"
   ],
-  "version": "0.3.0"
+  "version": "0.4.0"
 }

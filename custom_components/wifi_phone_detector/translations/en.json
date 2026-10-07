@@ -1,10 +1,10 @@
 {
-  "title": "FiberGateway Phone Detector",
+  "title": "FiberGateway",
   "config": {
     "step": {
       "user": {
         "title": "Connect to your FiberGateway router",
-        "description": "Read connected devices from both Wi-Fi radios using your router login. HOME and GUEST were verified on GR141DG. Requires local Telnet access; credentials are transmitted without encryption.",
+        "description": "Connect to your FiberGateway for device presence and router control. Requires local Telnet access; credentials are transmitted without encryption.",
         "data": {
           "host": "Router address",
           "port": "Telnet port",
@@ -29,12 +29,13 @@
         }
       },
       "names": {
-        "title": "Phone name keywords",
-        "description": "A connected device counts as a phone if its name contains any keyword, ignoring capital letters. Enter typical phone names or your own device names, separated by commas or newlines. Visitors with matching names are detected automatically. Departure delay keeps presence on through brief disconnections; 0 disables it.",
+        "title": "Router options",
+        "description": "Phone detection is optional; disable it to use device inventory and router control without matching phones. When enabled, a device counts as a phone if its name contains any keyword, ignoring case. Commas and newlines separate keywords; departure delay keeps presence on through brief disconnections.",
         "data": {
           "phone_name_keywords": "Name keywords",
           "scan_interval": "Check every (seconds, 15–300)",
-          "departure_delay": "Departure delay in seconds (0–1800)"
+          "departure_delay": "Departure delay in seconds (0–1800)",
+          "phone_detection": "Enable phone detection"
         }
       }
     },
@@ -55,17 +56,108 @@
   "options": {
     "step": {
       "init": {
-        "title": "Phone name keywords",
-        "description": "A connected device counts as a phone if its name contains any keyword, ignoring capital letters. Enter typical phone names or your own device names, separated by commas or newlines. Visitors with matching names are detected automatically. Departure delay keeps presence on through brief disconnections; 0 disables it.",
+        "title": "Router options",
+        "description": "Phone detection is optional; disable it to use device inventory and router control without matching phones. When enabled, a device counts as a phone if its name contains any keyword, ignoring case. Commas and newlines separate keywords; departure delay keeps presence on through brief disconnections.",
         "data": {
           "phone_name_keywords": "Name keywords",
           "scan_interval": "Check every (seconds, 15–300)",
-          "departure_delay": "Departure delay in seconds (0–1800)"
+          "departure_delay": "Departure delay in seconds (0–1800)",
+          "phone_detection": "Enable phone detection"
         }
       }
     },
     "error": {
       "invalid_names": "Enter at least one keyword, separated by commas or newlines."
+    }
+  },
+  "services": {
+    "execute_command": {
+      "name": "Execute router command",
+      "description": "Run one Telnet CLI command using the router login configured in this integration; the command can read or change router settings.",
+      "fields": {
+        "command": {
+          "name": "Command",
+          "description": "One complete CLI command, for example /device-info/show or tree."
+        },
+        "config_entry_id": {
+          "name": "Router",
+          "description": "Select a configured router; leave empty when exactly one router is loaded."
+        }
+      }
+    },
+    "create_time_restriction": {
+      "name": "Create internet restriction",
+      "description": "Create a device internet-blocking schedule on the router; an identical existing rule is kept.",
+      "fields": {
+        "name": {
+          "name": "Rule name",
+          "description": "Use 1–64 letters, numbers, underscores or hyphens; remove an existing rule before changing its settings."
+        },
+        "mac": {
+          "name": "Device MAC address",
+          "description": "Find this in the Connected devices sensor or the router device list."
+        },
+        "days": {
+          "name": "Weekdays",
+          "description": "Days on which the block starts, using the router’s local timezone."
+        },
+        "start_time": {
+          "name": "Block starts",
+          "description": "Start time with minute precision; use zero seconds."
+        },
+        "end_time": {
+          "name": "Block ends",
+          "description": "End time with minute precision; a time before the start ends the next day."
+        },
+        "config_entry_id": {
+          "name": "Router",
+          "description": "Select a configured router; leave empty when exactly one router is loaded."
+        }
+      }
+    },
+    "remove_time_restriction": {
+      "name": "Remove internet restriction",
+      "description": "Remove only the named rule; other router restrictions are preserved.",
+      "fields": {
+        "name": {
+          "name": "Rule name",
+          "description": "Exact rule name; letters, numbers, underscores or hyphens."
+        },
+        "config_entry_id": {
+          "name": "Router",
+          "description": "Select a configured router; leave empty when exactly one router is loaded."
+        }
+      }
+    },
+    "get_time_restrictions": {
+      "name": "Read internet restrictions",
+      "description": "Return the router’s saved internet-blocking schedules.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Router",
+          "description": "Select a configured router; leave empty when exactly one router is loaded."
+        }
+      }
+    },
+    "get_router_info": {
+      "name": "Read router information",
+      "description": "Return the router’s device-information output.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Router",
+          "description": "Select a configured router; leave empty when exactly one router is loaded."
+        }
+      }
+    },
+    "refresh_devices": {
+      "name": "Refresh connected devices",
+      "description": "Read the connected Wi-Fi device inventory now.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Router",
+          "description": "Select a configured router; leave empty when exactly one router is loaded."
+        }
+      }
     }
   }
 }

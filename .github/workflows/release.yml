@@ -39,6 +39,7 @@ jobs:
         run: |
           python -m unittest discover -s tests -v
           python tools/ha_smoke_test.py
+          python tools/ha_control_smoke_test.py
       - name: Build and validate release archive
         run: python tools/build_release.py --output dist --tag "$RELEASE_TAG"
       - name: Publish GitHub release
@@ -49,4 +50,4 @@ jobs:
             echo "Release already exists; leaving its tag and assets unchanged."
             exit 0
           fi
-          gh release create "$RELEASE_TAG" "dist/fibergateway-phone-detector-$RELEASE_TAG.zip" --target "$GITHUB_SHA" --title "FiberGateway Phone Detector $RELEASE_TAG" --notes-file CHANGELOG.md
+          gh release create "$RELEASE_TAG" "dist/fibergateway-$RELEASE_TAG.zip" --target "$GITHUB_SHA" --title "FiberGateway $RELEASE_TAG" --notes-file CHANGELOG.md

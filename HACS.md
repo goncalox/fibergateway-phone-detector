@@ -4,15 +4,13 @@
 
 The source is public at [goncalox/fibergateway-phone-detector](https://github.com/goncalox/fibergateway-phone-detector).
 
-Version [v0.3.0](https://github.com/goncalox/fibergateway-phone-detector/releases/tag/v0.3.0) is published with an installable ZIP.
-
-All 61 core tests, 13 Home Assistant runtime checks, HACS validation and Home Assistant manifest validation pass on GitHub.
+The latest release includes an installable ZIP, with automated source tests and manifest validation in the release workflow.
 
 ## Install
 
 1. Open HACS and choose **Custom repositories** from its menu.
 2. Enter `https://github.com/goncalox/fibergateway-phone-detector` and choose **Integration** as the type.
-3. Add and download **FiberGateway Phone Detector**.
+3. Add and download **FiberGateway**.
 4. Restart Home Assistant.
 5. Add or continue using the integration under **Settings → Devices & services**.
 
@@ -20,7 +18,7 @@ The domain remains `wifi_phone_detector`, so an existing manual installation kee
 
 Remove neither the integration entry nor its stored configuration during the switch.
 
-Future published releases will appear through HACS's update management; restart Home Assistant after installing integration updates.
+Published releases appear through HACS's update management; restart Home Assistant after installing integration updates.
 
 This uses a custom repository and does not require inclusion in the default HACS catalog.
 

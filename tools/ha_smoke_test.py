@@ -6,7 +6,7 @@ import logging
 from pathlib import Path
 import shutil
 import tempfile
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntries
@@ -40,7 +40,7 @@ async def main():
             return tuple(clients)
 
         try:
-            with patch.object(router_module.RouterClient, 'async_fetch', fetch):
+            with patch.object(router_module.RouterClient, 'async_fetch', fetch), patch.object(router_module.RouterClient, 'async_execute', AsyncMock(return_value='CLI help')):
                 form = await hass.config_entries.flow.async_init(DOMAIN, context={'source': 'user'})
                 assert form['step_id'] == 'user', form
                 form = await hass.config_entries.flow.async_configure(form['flow_id'], {'host': '192.0.2.1', 'port': 23, 'username': 'test-user', 'password': 'fake-password'})

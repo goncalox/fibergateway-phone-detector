@@ -4,7 +4,7 @@ import logging
 from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_USERNAME
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from .const import (CONF_INTERVAL, CONF_NAMES, CONF_DEPARTURE_DELAY, DEFAULT_DEPARTURE_DELAY,
+from .const import (CONF_INTERVAL, CONF_NAMES, CONF_PHONE_DETECTION, CONF_DEPARTURE_DELAY, DEFAULT_DEPARTURE_DELAY,
                     DEFAULT_NAMES, DEFAULT_INTERVAL, DEFAULT_PORT, DOMAIN, EVENT_PHONE_ARRIVED)
 from .models import Snapshot
 from .parser import ParseError
@@ -24,7 +24,9 @@ class PhoneCoordinator(DataUpdateCoordinator[Snapshot]):
         self.tracker = PresenceTracker(entry.options.get(CONF_DEPARTURE_DELAY, DEFAULT_DEPARTURE_DELAY))
         self.router = RouterClient(entry.data[CONF_HOST], entry.data[CONF_USERNAME],
                                    entry.data[CONF_PASSWORD], entry.data.get(CONF_PORT, DEFAULT_PORT))
-        self.scanner = PhoneScanner(self.router, name_keywords=entry.options.get(CONF_NAMES, DEFAULT_NAMES))
+        enabled = entry.options.get(CONF_PHONE_DETECTION, True)
+        self.scanner = PhoneScanner(self.router, name_keywords=entry.options.get(CONF_NAMES) or DEFAULT_NAMES,
+                                    enabled=enabled)
 
     async def _async_update_data(self) -> Snapshot:
         try:

@@ -29,7 +29,7 @@ Use `--json` for a local machine-readable report and `--interval 15` to control 
 
 Home Assistant has a separate polling option, defaulting to 45 seconds.
 
-Stop any older running watcher and restart it to load the v0.3.0 code.
+Stop any older running watcher and restart it to load the current code.
 
 The Mac launchers in this workspace use its existing test environment and are not included in the install ZIP.
 

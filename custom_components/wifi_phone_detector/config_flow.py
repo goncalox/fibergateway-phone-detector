@@ -11,7 +11,7 @@ from homeassistant.core import callback
 from homeassistant.helpers import selector
 
 from .const import (
-    CONF_INTERVAL, CONF_NAMES, DEFAULT_NAMES, CONF_DEPARTURE_DELAY, DEFAULT_DEPARTURE_DELAY,
+    CONF_INTERVAL, CONF_NAMES, CONF_PHONE_DETECTION, DEFAULT_NAMES, CONF_DEPARTURE_DELAY, DEFAULT_DEPARTURE_DELAY,
     DEFAULT_INTERVAL, DEFAULT_PORT, DOMAIN, NAME,
 )
 from .parser import ParseError
@@ -31,12 +31,10 @@ def connection_schema(defaults=None):
 
 
 async def validate_connection(data):
-    """Validate authentication and association parsing on both radio indexes."""
+    """Validate login independently of optional phone detection."""
     try:
         client = RouterClient(data[CONF_HOST], data[CONF_USERNAME], data[CONF_PASSWORD], data[CONF_PORT])
-        await client.async_fetch()
-        if not client.dhcp_available:
-            return "cannot_read_names"
+        await client.async_execute("help")
     except AuthenticationError:
         return "invalid_auth"
     except RouterError:
@@ -123,6 +121,7 @@ def detection_schema(defaults=None):
     """One comma- or newline-separated keyword list and a polling interval."""
     defaults = defaults or {}
     return vol.Schema({
+        vol.Required(CONF_PHONE_DETECTION, default=defaults.get(CONF_PHONE_DETECTION, True)): bool,
         vol.Required(CONF_NAMES, default=defaults.get(CONF_NAMES, DEFAULT_NAMES)):
             selector.TextSelector(selector.TextSelectorConfig(multiline=True)),
         vol.Required(CONF_INTERVAL, default=defaults.get(CONF_INTERVAL, DEFAULT_INTERVAL)):
@@ -133,8 +132,11 @@ def detection_schema(defaults=None):
 
 
 def detection_options(user_input):
-    keywords = parse_name_keywords(user_input[CONF_NAMES])
+    enabled = user_input.get(CONF_PHONE_DETECTION, True)
+    text = user_input[CONF_NAMES]
+    keywords = parse_name_keywords(text) if enabled or text.strip() else ()
     return {CONF_NAMES: ", ".join(keywords), CONF_INTERVAL: user_input[CONF_INTERVAL],
+            CONF_PHONE_DETECTION: enabled,
             CONF_DEPARTURE_DELAY: user_input.get(CONF_DEPARTURE_DELAY, DEFAULT_DEPARTURE_DELAY)}
 
 

@@ -4,17 +4,17 @@ Open the **Connected devices** sensor to inspect its current device names and `d
 
 Each device includes its name, IP address, MAC, phone-match status and matching keywords.
 
-The list contains only currently associated Wi-Fi devices across both radio tables, including HOME and GUEST on the tested firmware.
+The list contains only currently associated Wi-Fi devices across both radio tables, including main and guest clients on the tested firmware; network names are not filters.
 
 For a readable dashboard list, add a **Markdown** card and paste this configuration.
 
-Replace the entity ID if Home Assistant assigned a different one; upgrades may retain the earlier `wi_fi_phone_detector` prefix.
+Replace the entity ID if Home Assistant assigned a different one; upgrades retain their existing IDs, which may use `fibergateway_phone_detector` or `wi_fi_phone_detector`.
 
 ```yaml
 type: markdown
 title: Connected Wi-Fi devices
 content: >-
-  {% set inventory = 'sensor.fibergateway_phone_detector_connected_devices' %}
+  {% set inventory = 'sensor.fibergateway_connected_devices' %}
   {% if states(inventory) in ['unavailable', 'unknown'] %}
   Router readings unavailable.
   {% else %}

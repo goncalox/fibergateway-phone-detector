@@ -1,14 +1,14 @@
-# GR141DG compatibility — v0.3.0
+# GR141DG compatibility — v0.4.0
 
 Model: GR141DG.
 
 Firmware tested: `3GN8020900r29`.
 
-Validation date: 6 October 2026.
+Live protocol checks: 6–7 October 2026.
 
 ## Live router evidence
 
-Telnet login and the two radio commands were verified:
+Telnet login and both radio tables were verified:
 
 ```text
 wireless/show-stationinfo --wifi-index=0
@@ -16,50 +16,53 @@ wireless/show-stationinfo --wifi-index=1
 /lan/dhcp/show
 ```
 
-Index 0 covers 2.4 GHz; index 1 covers 5 GHz.
+Index 0 covers 2.4 GHz; index 1 covers 5 GHz; indexes 2–7 were rejected as unsupported.
 
-Indexes 2–7 were explicitly rejected as unsupported.
+The tables have a `Yes` association marker; DHCP provides hostname, MAC and IPv4 metadata.
 
-The tables use a `Yes` association marker and DHCP includes hostnames, MACs and IPv4 addresses.
+A connected/disconnected/reconnected iPhone followed counts 1 → 0 → 1 even while its DHCP lease remained.
 
-A connected/disconnected/reconnected iPhone followed counts 1 → 0 → 1, despite its DHCP lease remaining after disconnection.
+Moving the phone from the main to guest network showed an associated guest row alongside main-network clients.
 
-Moving the phone from HOME to GUEST produced an associated GUEST row on index 1, alongside HOME devices.
+Both station tables are read without filtering by SSID name, and duplicate MACs are merged.
 
-The phone reported an iPhone hostname on each network, with a different MAC and guest-subnet address on GUEST.
+The following native commands were also verified by code:
 
-This confirms the existing station reads cover both HOME and GUEST on this firmware.
+```text
+/management/ntp/show
+/parental-control/time-restriction/show
+/parental-control/time-restriction/create --MACAddress=... --days-week=Mon,Tue,Wed,Thu,Fri --end-time=05:00 --name=... --start-time=00:00
+/parental-control/time-restriction/remove --rmv-name=...
+```
 
-## Current design
+Creating the weekday midnight–05:00 rule was verified by reading it back; new IPv4 and IPv6 internet connections were blocked during the active window, and the user confirmed the block worked.
 
-Version 0.3.0 intentionally uses configured hostname keywords only.
+No private router reports, credentials or device addresses are included in the public source.
 
-Structured model discovery, heuristic scores and packet-capture experiments are removed from the integration.
+## Current design and limitations
 
-All keywords are literal case-insensitive substrings.
+Router control and optional phone detection share the configured login.
 
-Anonymous devices and names outside the configured list do not match.
+Matching uses literal case-insensitive name substrings; presence requires current association, never a DHCP lease alone.
 
-DHCP output must be available; otherwise the poll fails and entities become unavailable.
+With phone detection enabled, missing DHCP names fail the poll rather than confirm absence.
 
-Presence depends on current association, never a DHCP lease alone.
+With phone detection disabled, missing DHCP names do not prevent station inventory from updating.
 
-## Validation
+Native schedules are bound to the chosen MAC and router clock; other interfaces or private-MAC changes need their own rules.
 
-Automated tests and saved live-response replays are run against the shared parser and matcher.
+Other generic CLI operations depend on model, firmware and login permissions; every web-interface feature is not guaranteed to be available through Telnet.
 
-All 61 automated core tests and Python syntax checks pass.
+## Reproducible validation
 
-Replaying the saved HOME and GUEST station/DHCP tables through the new matcher detected one phone in each case.
+The core tests cover parsing, matching, both-radio association, arrival/departure behavior, command validation, serialized sessions, verified schedule writes and preservation of existing rules.
 
-An actual Home Assistant 2025.3.0 runtime smoke test passed 13 checks using simulated router responses: setup and validation, presence and arrival behavior, grace periods, current device inventory, outage recovery, options reload and unload.
+`tools/ha_smoke_test.py` runs 13 checks in Home Assistant 2025.3.0 using simulated router responses for flows, entity states, grace periods, inventory and outage recovery.
 
-This validates the Home Assistant flow and entity plumbing separately from the live router protocol evidence.
+`tools/ha_control_smoke_test.py` runs 11 checks in the same actual runtime for six actions, UI selectors, response data, validation, administrator access, multi-router selection, optional matching and upgrade compatibility.
 
-The reproducible smoke test is `tools/ha_smoke_test.py` and runs in CI after installing Home Assistant.
+Runtime action tests never write to a real router; live protocol evidence is separate from these simulated checks.
 
-No installation on the user's Home Assistant instance has been performed.
+No installation on the user’s Home Assistant instance has been performed.
 
-Departure tracking uses monotonic time and successful polls, with separate timers per matching device.
-
-Public source, the v0.3.0 release, HACS validation and Home Assistant manifest validation are now verified on GitHub.
+The release workflow runs source/runtime tests and Home Assistant manifest validation before publishing.

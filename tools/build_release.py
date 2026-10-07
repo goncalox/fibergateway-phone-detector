@@ -16,12 +16,12 @@ def build(output: Path, tag: str | None = None) -> Path:
     if tag is not None and tag != f"v{version}":
         raise ValueError("Release tag must match the integration manifest version")
     output.mkdir(parents=True, exist_ok=True)
-    destination = output / f"fibergateway-phone-detector-v{version}.zip"
+    destination = output / f"fibergateway-v{version}.zip"
     with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as archive:
         for path in sorted((PROJECT / "custom_components/wifi_phone_detector").rglob("*")):
             if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc":
                 archive.write(path, path.relative_to(PROJECT))
-        for name in ("LICENSE", "README.md", "AUTOMATIONS.md", "DASHBOARD.md", "HACS.md", "CHANGELOG.md", "GR141DG-compatibility.md", "STANDALONE.md", "requirements-standalone.txt", "hacs.json", "tools/standalone.py"):
+        for name in ("LICENSE", "README.md", "ROUTER_CONTROL.md", "AUTOMATIONS.md", "DASHBOARD.md", "HACS.md", "CHANGELOG.md", "GR141DG-compatibility.md", "STANDALONE.md", "requirements-standalone.txt", "hacs.json", "tools/standalone.py"):
             archive.write(PROJECT / name, name)
     with zipfile.ZipFile(destination) as archive:
         if archive.testzip() is not None:

@@ -1,0 +1,22 @@
+{
+  "services": {
+    "execute_command": {
+      "service": "mdi:console"
+    },
+    "create_time_restriction": {
+      "service": "mdi:network-off"
+    },
+    "remove_time_restriction": {
+      "service": "mdi:network"
+    },
+    "get_time_restrictions": {
+      "service": "mdi:calendar-clock"
+    },
+    "get_router_info": {
+      "service": "mdi:router-wireless"
+    },
+    "refresh_devices": {
+      "service": "mdi:refresh"
+    }
+  }
+}

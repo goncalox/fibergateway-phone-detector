@@ -1,6 +1,16 @@
-# FiberGateway Phone Detector — v0.3.0
+# FiberGateway — v0.4.0
 
-A Home Assistant custom integration for the MEO/Altice FiberGateway GR141DG.
+A Home Assistant custom integration for device inventory, router control and optional phone presence on the MEO/Altice FiberGateway GR141DG.
+
+Use its actions in your own Home Assistant scripts and automations: read router information, refresh connected devices, create/remove native internet schedules, or execute any command exposed by the router’s Telnet CLI.
+
+See [ROUTER_CONTROL.md](ROUTER_CONTROL.md) for controls and examples.
+
+Commands supported by the CLI depend on the router model, firmware and login permissions; this does not promise every web-interface feature.
+
+Phone detection is optional and can be disabled in **Configure** while keeping device inventory and router actions available.
+
+## Optional phone presence
 
 Enter a list of name keywords; when any currently connected Wi-Fi device has a matching hostname, the **Phone connected** presence sensor turns on.
 
@@ -14,18 +24,20 @@ Visitors are picked up automatically if the name reported by the router contains
 
 1. Open HACS → Custom repositories.
 2. Add `https://github.com/goncalox/fibergateway-phone-detector` with type **Integration**.
-3. Download **FiberGateway Phone Detector** and restart Home Assistant.
-4. Open **Settings → Devices & services → Add integration → FiberGateway Phone Detector** and enter your router login and name keywords.
+3. Download **FiberGateway** and restart Home Assistant.
+4. Open **Settings → Devices & services → Add integration → FiberGateway** and enter your router login and name keywords.
 
-Version [v0.3.0](https://github.com/goncalox/fibergateway-phone-detector/releases/tag/v0.3.0) passes HACS and Home Assistant manifest validation, 61 core tests and 13 Home Assistant runtime checks.
+Existing installations keep their router login, configuration and entity IDs; update through HACS and restart Home Assistant.
+
+The repository URL and `wifi_phone_detector` integration domain remain unchanged for compatibility.
 
 ## Manual installation
 
-1. Extract the v0.3.0 ZIP and copy `custom_components/wifi_phone_detector` into your Home Assistant `/config/custom_components/` directory.
+1. Extract the v0.4.0 ZIP and copy `custom_components/wifi_phone_detector` into your Home Assistant `/config/custom_components/` directory.
 2. Restart Home Assistant.
-3. Open **Settings → Devices & services → Add integration → FiberGateway Phone Detector**.
+3. Open **Settings → Devices & services → Add integration → FiberGateway**.
 4. Enter the router address (normally `192.168.1.254`), Telnet port (normally `23`), and router login.
-5. Review the name keywords and polling interval.
+5. Choose whether to enable phone detection, then review keywords and the polling interval.
 
 Home Assistant 2025.3 or newer is required.
 
@@ -35,7 +47,7 @@ See [HACS.md](HACS.md) for installation and update steps.
 
 Router Telnet access sends its login without encryption, so use it on your trusted local network.
 
-No Mac password, packet capture, mDNS discovery, device registration or external service is used.
+No Mac password, packet capture or external service is used.
 
 ## Configure name matching
 
@@ -90,7 +102,9 @@ A brief reconnection with the same MAC within the grace period does not emit ano
 
 Arrivals identify Wi-Fi MAC addresses, not people; a phone switching private MAC or networks can appear as a new arrival.
 
-Router association or DHCP-name failures make entities unavailable instead of reporting a false absence.
+Router association failures make entities unavailable instead of reporting a false absence.
+
+When phone matching is enabled, DHCP-name failures also make the poll unavailable; with phone detection disabled, missing DHCP names do not prevent the Wi-Fi inventory from updating.
 
 Old DHCP leases are never sufficient for presence: a matching MAC must also appear as currently associated in a Wi-Fi station table.
 
@@ -98,7 +112,9 @@ Old DHCP leases are never sufficient for presence: a matching MAC must also appe
 
 Both radio indexes (2.4 GHz and 5 GHz) are read and duplicate MACs are merged.
 
-Live router checks on GR141DG firmware `3GN8020900r29` verified HOME and GUEST in the station tables.
+Live router checks on GR141DG firmware `3GN8020900r29` verified main and guest clients in the station tables.
+
+SSID names are never filters: the reads include all associated devices reported across the two radio tables, regardless of network name.
 
 The tested phone matched the `iphone` keyword on both HOME and GUEST.
 
